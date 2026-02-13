@@ -2,6 +2,7 @@
 import { NextResponse } from 'next/server'
 import db from '@/lib/db'
 import seedData from '../../../../prisma/seed_data.json'
+import stockGroups from '../../../../prisma/stock_groups.json'
 
 export const dynamic = 'force-dynamic'
 
@@ -10,6 +11,19 @@ export async function GET() {
         const stocks = seedData as any[]
         console.log(`Start seeding ${stocks.length} stocks via API...`)
 
+        // 1. Seed Groups
+        const groups = Object.keys(stockGroups)
+        for (const groupName of groups) {
+            await db.stockGroup.upsert({
+                where: { name: groupName },
+                update: {},
+                create: { name: groupName }
+            })
+        }
+        await db.stockGroup.upsert({ where: { name: 'Yeter' }, update: {}, create: { name: 'Yeter' } })
+
+
+        // 2. Seed Stocks
         for (const stock of stocks) {
             // Upsert Stock
             const createdStock = await db.stock.upsert({
@@ -32,6 +46,24 @@ export async function GET() {
                     roe: stock.roe,
                 },
             })
+
+            // 3. Link to Groups
+            let assignedGroup = 'Yeter'
+            for (const [groupName, symbols] of Object.entries(stockGroups)) {
+                if ((symbols as string[]).includes(stock.symbol)) {
+                    assignedGroup = groupName
+                    break
+                }
+            }
+
+            // Connect to group
+            const groupRecord = await db.stockGroup.findUnique({ where: { name: assignedGroup } })
+            if (groupRecord) {
+                await db.stock.update({
+                    where: { id: createdStock.id },
+                    data: { groupId: groupRecord.id }
+                })
+            }
 
             // Financials
             for (const fin of stock.financials) {
