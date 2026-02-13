@@ -137,42 +137,46 @@ async function checkForNewIsraeliReports(symbol: string, stockId: number) {
     }
 }
 
+
+import { getBizportalQuote } from './bizportal'
+
 export async function updateStockPrice(symbol: string) {
     try {
-        const quote = await yahooFinance.quote(symbol)
+        let price: number | undefined
+        let marketCap: number | undefined
+        let peRatio: number | undefined
+        let roe: number | undefined
 
-        if (!quote) {
-            console.error(`No data found for ${symbol}`)
-            return null
+        // BIZPORTAL PATH for Israeli Stocks
+        if (symbol.endsWith('.TA')) {
+            const stockId = symbol.replace('.TA', '') // 1100957.TA -> 1100957
+            const bizData = await getBizportalQuote(stockId)
+
+            if (bizData) {
+                price = bizData.price
+                marketCap = bizData.marketCap
+                console.log(`[Bizportal] Fetched ${symbol}: ${price} ILS, Cap: ${marketCap}`)
+            } else {
+                console.error(`[Bizportal] Failed to fetch data for ${symbol}`)
+                return null
+            }
         }
-
-        let price = quote.regularMarketPrice
-        let marketCap = quote.marketCap
-        const peRatio = quote.trailingPE || quote.forwardPE
-        const roe = quote.returnOnEquity ? quote.returnOnEquity * 100 : undefined
+        // YAHOO PATH for Global Stocks (S&P 500 etc)
+        else {
+            const quote = await yahooFinance.quote(symbol)
+            if (!quote) {
+                console.error(`No data found for ${symbol}`)
+                return null
+            }
+            price = quote.regularMarketPrice
+            marketCap = quote.marketCap
+            peRatio = quote.trailingPE || quote.forwardPE
+            roe = quote.returnOnEquity ? quote.returnOnEquity * 100 : undefined
+        }
 
         if (price === undefined) {
             console.error(`No price found for ${symbol}`)
             return null
-        }
-
-        // TASE (.TA) Logic: 
-        // 1. Yahoo Price is in Agorot. Convert to ILS.
-        if (symbol.endsWith('.TA')) {
-            price = price / 100
-        }
-
-        // 2. Normalization: Yahoo Market Cap is inconsistent (sometimes absolute ILS, sometimes thousands).
-        // A public company on TASE almost always has > 1,000,000 shares.
-        // We detect "thousands" if implied shares (marketCap / priceILS) is suspiciously low.
-        if (symbol.endsWith('.TA') && marketCap && price > 0) {
-            const impliedShares = marketCap / price;
-            // If less than 50,000 shares, it's virtually certain that the marketCap is in thousands.
-            // (Previously 500,000, but high-priced stocks like HRON naturally have fewer shares).
-            if (impliedShares < 50000) {
-                console.log(`⚠️ Scaling marketCap for ${symbol} by 1000 (Implied shares ${impliedShares.toFixed(0)} < 50k)`)
-                marketCap = marketCap * 1000
-            }
         }
 
         // Update DB
