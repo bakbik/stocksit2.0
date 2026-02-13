@@ -21,13 +21,17 @@ export function FinancialChart({ data }: FinancialChartProps) {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="period" />
                     <YAxis
-                        tickFormatter={(value) =>
-                            new Intl.NumberFormat('en-US', { notation: "compact", compactDisplay: "short" }).format(value)
+                        tickFormatter={(value: any) =>
+                            typeof value === 'number'
+                                ? new Intl.NumberFormat('en-US', { notation: "compact", compactDisplay: "short" }).format(value)
+                                : String(value)
                         }
                     />
                     <Tooltip
-                        formatter={(value: number) =>
-                            new Intl.NumberFormat('en-US').format(value)
+                        formatter={(value: any) =>
+                            typeof value === 'number'
+                                ? new Intl.NumberFormat('en-US').format(value)
+                                : String(value)
                         }
                     />
                     <Legend />
