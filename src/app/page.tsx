@@ -11,14 +11,6 @@ export default async function Home({
 }) {
   const { group, sortBy = 'marketCap', sortOrder = 'desc', buyable, latestOnly, view } = await searchParams
 
-  const groups = await (db as any).stockGroup.findMany({
-    include: {
-      _count: {
-        select: { stocks: true }
-      }
-    }
-  })
-
   // Helper to convert period string to comparable number
   const parsePeriod = (p: string) => {
     if (!p) return 0
@@ -35,61 +27,58 @@ export default async function Home({
   const nativeFields = ['symbol', 'name']
   const isNative = nativeFields.includes(sortBy)
 
-  const rawStocks = await (db as any).stock.findMany({
-    where: group ? {
-      groups: {
-        some: { name: group }
-      }
-    } : {},
-    orderBy: isNative ? {
-      [sortBy]: sortOrder as 'asc' | 'desc'
-    } : {
-      marketCap: 'desc' // Default fallback
-    },
+  // Fetch all stocks to calculate dynamic counts and overlapping groups
+  const allStocksRaw = await (db as any).stock.findMany({
     include: {
       returns: true,
-      financials: true, // Fetch all to find latest in-memory reliably
-      watchlists: {
-        where: { userId: 1 } // Default user
-      },
+      financials: true,
+      watchlists: { where: { userId: 1 } },
       groups: true
     }
   }) as any[]
 
-  // Improve sorting and latest record selection
-  let stocks: any[] = (rawStocks as any[]).map(s => {
-    // Find the latest one for display
+  // Process all stocks with metrics
+  const allStocks = allStocksRaw.map(s => {
     const latestFin = [...s.financials].sort((a, b) => parsePeriod(b.period) - parsePeriod(a.period))[0] || null
     const metrics = calculateInvestmentMetrics(s, s.financials)
     return { ...s, latestFin, metrics }
   })
 
-  if (buyable === 'true') {
-    stocks = stocks.filter(s => s.metrics?.verdict === 'buy')
-  }
-
-  // Latest Reports Filter Logic (standard reporting cycle offset)
+  // Apply Filters (Buyable / LatestOnly)
+  // Latest Reports Filter Logic
   const now = new Date()
-  const month = now.getMonth() // 0-11
+  const month = now.getMonth()
   const curY = now.getFullYear()
   let targetPeriods: string[] = []
+  if (month >= 0 && month <= 2) targetPeriods = [`Q3/${curY - 1}`]
+  else if (month >= 3 && month <= 5) targetPeriods = [`Y/${curY - 1}`, `Q4/${curY - 1}`]
+  else if (month >= 6 && month <= 8) targetPeriods = [`Q1/${curY}`]
+  else targetPeriods = [`Q2/${curY}`]
 
-  if (month >= 0 && month <= 2) {
-    targetPeriods = [`Q3/${curY - 1}`]
-  } else if (month >= 3 && month <= 5) {
-    targetPeriods = [`Y/${curY - 1}`, `Q4/${curY - 1}`]
-  } else if (month >= 6 && month <= 8) {
-    targetPeriods = [`Q1/${curY}`]
-  } else {
-    targetPeriods = [`Q2/${curY}`]
+  let filteredStocks = allStocks
+  if (buyable === 'true') {
+    filteredStocks = filteredStocks.filter(s => s.metrics?.verdict === 'buy')
   }
-
   if (latestOnly === 'true') {
-    stocks = stocks.filter(s => s.latestFin?.period && targetPeriods.includes(s.latestFin.period))
+    filteredStocks = filteredStocks.filter(s => s.latestFin?.period && targetPeriods.includes(s.latestFin.period))
   }
 
+  // Calculate dynamic counts for groups based on filtered list
+  const groupsRaw = await (db as any).stockGroup.findMany()
+  const groups = groupsRaw.map((g: any) => {
+    const count = filteredStocks.filter(s => s.groups.some((sg: any) => sg.name === g.name)).length
+    return { ...g, _count: { stocks: count } }
+  })
+
+  // Finally filter by selected group for display
+  let displayStocks = filteredStocks
+  if (group) {
+    displayStocks = displayStocks.filter(s => s.groups.some((sg: any) => sg.name === group))
+  }
+
+  // Sort
   if (!isNative) {
-    stocks.sort((a, b) => {
+    displayStocks.sort((a, b) => {
       let valA: any = null
       let valB: any = null
 
@@ -122,11 +111,22 @@ export default async function Home({
 
       return sortOrder === 'asc' ? valA - valB : valB - valA
     })
+  } else {
+    displayStocks.sort((a, b) => {
+      const valA = a[sortBy]
+      const valB = b[sortBy]
+      if (valA === null && valB === null) return 0
+      if (valA === null) return 1
+      if (valB === null) return -1
+      if (valA < valB) return sortOrder === 'asc' ? -1 : 1
+      if (valA > valB) return sortOrder === 'asc' ? 1 : -1
+      return 0
+    })
   }
 
   return (
     <DashboardClient
-      stocks={stocks}
+      stocks={displayStocks}
       groups={groups}
       group={group}
       sortBy={sortBy}
