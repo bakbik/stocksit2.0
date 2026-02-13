@@ -1,13 +1,10 @@
-import cron from 'node-cron'
-import { updateAllStocksData } from './lib/sync'
-import { checkAlerts } from './lib/alerts'
-
-export function register() {
+export async function register() {
     if (process.env.NEXT_RUNTIME === 'nodejs') {
-        console.log('--- Background Service Starting ---')
+        const cron = (await import('node-cron')).default
+        const { updateAllStocksData } = await import('./lib/sync')
+        const { checkAlerts } = await import('./lib/alerts')
 
-        // Run once on startup
-        // updateAllStocksData().catch(console.error)
+        console.log('--- Background Service Starting ---')
 
         // Schedule every 6 hours: 0 */6 * * *
         cron.schedule('0 */6 * * *', async () => {
