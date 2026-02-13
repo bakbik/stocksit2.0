@@ -11,7 +11,13 @@ export default async function Home({
 }) {
   const { group, sortBy = 'marketCap', sortOrder = 'desc', buyable, latestOnly, view } = await searchParams
 
-  const groups = await (db as any).stockGroup.findMany()
+  const groups = await (db as any).stockGroup.findMany({
+    include: {
+      _count: {
+        select: { stocks: true }
+      }
+    }
+  })
 
   // Helper to convert period string to comparable number
   const parsePeriod = (p: string) => {

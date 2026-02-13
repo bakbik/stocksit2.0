@@ -48,26 +48,44 @@ export async function GET() {
             })
 
             // 3. Link to Groups
-            let assignedGroup = 'Yeter'
+            // 3. Link to Groups
+            const matchedGroups = []
             for (const [groupName, symbols] of Object.entries(stockGroups)) {
                 if ((symbols as string[]).includes(stock.symbol)) {
-                    assignedGroup = groupName
-                    break
+                    matchedGroups.push(groupName)
                 }
             }
 
-            // Connect to group
-            const groupRecord = await db.stockGroup.findUnique({ where: { name: assignedGroup } })
-            if (groupRecord) {
-                await db.stock.update({
-                    where: { id: createdStock.id },
-                    data: {
-                        groups: {
-                            set: [], // Disconnect previous
-                            connect: { id: groupRecord.id }
-                        }
-                    }
+            // Connect to groups
+            if (matchedGroups.length > 0) {
+                const groupRecords = await db.stockGroup.findMany({
+                    where: { name: { in: matchedGroups } }
                 })
+
+                if (groupRecords.length > 0) {
+                    await db.stock.update({
+                        where: { id: createdStock.id },
+                        data: {
+                            groups: {
+                                set: [], // Disconnect previous
+                                connect: groupRecords.map(g => ({ id: g.id }))
+                            }
+                        }
+                    })
+                }
+            } else {
+                const yeterGroup = await db.stockGroup.findUnique({ where: { name: 'Yeter' } })
+                if (yeterGroup) {
+                    await db.stock.update({
+                        where: { id: createdStock.id },
+                        data: {
+                            groups: {
+                                set: [],
+                                connect: { id: yeterGroup.id }
+                            }
+                        }
+                    })
+                }
             }
 
             // Financials

@@ -153,7 +153,7 @@ export function DashboardClient({ stocks, groups, group, sortBy, sortOrder, buya
                                     })()}`}
                                     className={`px-4 py-2 rounded-xl text-xs font-black transition-all ${group === g.name ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:bg-slate-50'}`}
                                 >
-                                    {g.name}
+                                    {g.name} <span className="opacity-60 text-[10px] ml-0.5">({g._count?.stocks || 0})</span>
                                 </Link>
                             ))}
                         </div>

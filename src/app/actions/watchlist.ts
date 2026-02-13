@@ -31,6 +31,16 @@ export async function toggleWatchlist(stockId: number) {
         })
     }
 
+    // Revalidate paths
     revalidatePath('/')
-    revalidatePath(`/stock/${stockId}`) // Revalidate by ID or find symbol
+
+    // We need the symbol to revalidate the stock detail page
+    const stock = await db.stock.findUnique({
+        where: { id: stockId },
+        select: { symbol: true }
+    })
+
+    if (stock) {
+        revalidatePath(`/stock/${stock.symbol}`)
+    }
 }
