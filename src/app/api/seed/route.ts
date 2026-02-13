@@ -61,7 +61,12 @@ export async function GET() {
             if (groupRecord) {
                 await db.stock.update({
                     where: { id: createdStock.id },
-                    data: { groupId: groupRecord.id }
+                    data: {
+                        groups: {
+                            set: [], // Disconnect previous
+                            connect: { id: groupRecord.id }
+                        }
+                    }
                 })
             }
 
