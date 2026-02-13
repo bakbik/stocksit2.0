@@ -1,0 +1,200 @@
+[
+  {
+    "Unnamed: 0": null,
+    "Unnamed: 1": "פעולות בגיליון מניות היתר ברבעון שלישי",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": null,
+    "Unnamed: 1": null,
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": 1.0,
+    "Unnamed: 1": "קח את המניות עם  מכפיל הרווח בין 2 ל- 40",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": 2.0,
+    "Unnamed: 1": "בדוק שיחס ההון למאזן גבוה יותר מ-20% (עמודה P חלקי O - הון עצמי חלקי מאזן)",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": 3.0,
+    "Unnamed: 1": "חשב רווח נקי גלום במחיר המניה (עמודה D חלקי E - שווי שוק חלקי מכפיל הרווח)",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": 4.0,
+    "Unnamed: 1": "חבר את הרווח הנקי של 4 הרבעונים האחרונים (רבעון 4 משנה קודמת + 3 הרבעונים השנה)",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": 5.0,
+    "Unnamed: 1": "בדוק שההפרש בין 2 התנאים האחרונים (3+4) קטן מ-5%",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": null,
+    "Unnamed: 1": null,
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": null,
+    "Unnamed: 1": "בהימלא כל התנאים הנ\"ל, זאת הקבוצה שנעבוד עליה",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": null,
+    "Unnamed: 1": null,
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": 6.0,
+    "Unnamed: 1": "חבר את 3 ההכנסות של הרבעונים השנה - חלק ב-3 כפול 4",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": 7.0,
+    "Unnamed: 1": "השווה לסך ההכנסות משנה קודמת בעמודה I",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": "הכנסות השנה חלקי הכנסות שנה קודמת, פחות 1 (באחוזים)"
+  },
+  {
+    "Unnamed: 0": 8.0,
+    "Unnamed: 1": "חבר את 3 הרווח הנקי של הרבעונים השנה - חלק ב-3 כפול 4",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": 9.0,
+    "Unnamed: 1": "השווה לסך הרווח הנקי משנה קודמת בעמודה J",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": "רווח נקי השנה חלקי רווח נקי שנה קודמת, פחות 1 (באחוזים)"
+  },
+  {
+    "Unnamed: 0": 10.0,
+    "Unnamed: 1": "פוטנציאל השקעה: השווה את סעיף 8 לסעיף 3",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": "סעיף 8 חלקי סעיף 3, פחות 1 (באחוזים)"
+  },
+  {
+    "Unnamed: 0": null,
+    "Unnamed: 1": null,
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": 11.0,
+    "Unnamed: 1": "סדר את הטבלה לפי סעיף 10 מהגבוה לנמוך",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  },
+  {
+    "Unnamed: 0": 12.0,
+    "Unnamed: 1": "להשקיע במניות שבהן כל 3 החישובים המסומנים בצהוב הם חיוביים - סעיף 7, 9, 10 עם דגש על סעיף 10 הכי חשוב",
+    "Unnamed: 2": null,
+    "Unnamed: 3": null,
+    "Unnamed: 4": null,
+    "Unnamed: 5": null,
+    "Unnamed: 6": null,
+    "Unnamed: 7": null,
+    "Unnamed: 8": null
+  }
+]

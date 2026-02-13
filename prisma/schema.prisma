@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  email      String?     @unique
+  watchlists Watchlist[]
+}
+
+model Stock {
+  id           Int               @id // TASE Security ID or custom ID for US stocks
+  symbol       String            @unique // e.g., "AVGL.TA" or "AAPL"
+  name         String
+  currentPrice Float?
+  marketCap    Float?
+  peRatio      Float?            // P/E Ratio
+  roe          Float?            // Return on Equity
+  lastUpdated  DateTime          @default(now())
+  
+  financials   FinancialRecord[]
+  returns      StockReturn[]
+  watchlists   Watchlist[]
+  alerts       Alert[]
+  notifications Notification[]
+  groups       StockGroup[]      @relation("StockToGroup")
+}
+
+model StockGroup {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique // e.g., "TA-35", "TA-125", "S&P 500"
+  description String?
+  stocks      Stock[]  @relation("StockToGroup")
+}
+
+model FinancialRecord {
+  id           Int      @id @default(autoincrement())
+  stockId      Int
+  stock        Stock    @relation(fields: [stockId], references: [id])
+  period       String   // e.g., "Q1/2025", "Y/2024"
+  totalBalance Float?
+  equity       Float?
+  revenue      Float?
+  netProfit    Float?
+  publishedAt  DateTime? // Exact date report was published
+  createdAt    DateTime @default(now())
+
+  @@unique([stockId, period])
+}
+
+model StockReturn {
+  id      Int    @id @default(autoincrement())
+  stockId Int
+  stock   Stock  @relation(fields: [stockId], references: [id])
+  period  String // e.g., "3m", "12m", "3y"
+  value   Float? // Percentage
+  
+  @@unique([stockId, period])
+}
+
+model Watchlist {
+  id      Int   @id @default(autoincrement())
+  userId  Int
+  user    User  @relation(fields: [userId], references: [id])
+  stockId Int
+  stock   Stock @relation(fields: [stockId], references: [id])
+
+  @@unique([userId, stockId])
+}
+
+model Alert {
+  id        Int      @id @default(autoincrement())
+  stockId   Int
+  stock     Stock    @relation(fields: [stockId], references: [id])
+  condition String   // e.g., "price > 150"
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  stockId   Int
+  stock     Stock    @relation(fields: [stockId], references: [id])
+  type      String   // e.g., "new_report"
+  period    String?  // e.g., "Q3/2025"
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

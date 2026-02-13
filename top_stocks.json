@@ -1,0 +1,708 @@
+[
+  {
+    "id": 1091354,
+    "name": "אפי נכסים",
+    "symbol": "1091354.TA",
+    "currentPrice": 21990.0,
+    "marketCap": 9109897.0,
+    "peRatio": 11.45,
+    "roe": null,
+    "financials": [
+      {
+        "period": "Y/2024",
+        "totalBalance": 21438107.0,
+        "equity": 6853575.0,
+        "revenue": 1519978.0,
+        "netProfit": 663303.0
+      },
+      {
+        "period": "Y/2023",
+        "totalBalance": 19582416.0,
+        "equity": 6590899.0,
+        "revenue": 1392801.0,
+        "netProfit": 211403.0
+      },
+      {
+        "period": "Q3/2025",
+        "totalBalance": 23206191.0,
+        "equity": 7729082.0,
+        "revenue": 393792.0,
+        "netProfit": 441652.0
+      },
+      {
+        "period": "Q2/2025",
+        "totalBalance": 22535856.0,
+        "equity": 7308112.0,
+        "revenue": 395430.0,
+        "netProfit": 114326.0
+      },
+      {
+        "period": "Q1/2025",
+        "totalBalance": 22399754.0,
+        "equity": 7360264.0,
+        "revenue": 277885.0,
+        "netProfit": 54698.0
+      },
+      {
+        "period": "Q4/2024",
+        "totalBalance": 21438107.0,
+        "equity": 6853575.0,
+        "revenue": 406866.0,
+        "netProfit": 185186.0
+      },
+      {
+        "period": "Q3/2024",
+        "totalBalance": 21884245.0,
+        "equity": 7292701.0,
+        "revenue": 398797.0,
+        "netProfit": 346614.0
+      }
+    ],
+    "returns": [
+      {
+        "period": "3m",
+        "value": 3.63
+      },
+      {
+        "period": "12m",
+        "value": 27.76
+      },
+      {
+        "period": "3y",
+        "value": 89.2
+      }
+    ]
+  },
+  {
+    "id": 387019,
+    "name": "אלרוב נדלן",
+    "symbol": "387019.TA",
+    "currentPrice": 29100.0,
+    "marketCap": 5995621.0,
+    "peRatio": 5.34,
+    "roe": null,
+    "financials": [
+      {
+        "period": "Y/2024",
+        "totalBalance": 17771124.0,
+        "equity": 5826003.0,
+        "revenue": 1238783.0,
+        "netProfit": 299425.0
+      },
+      {
+        "period": "Y/2023",
+        "totalBalance": 17636319.0,
+        "equity": 5559463.0,
+        "revenue": 1285405.0,
+        "netProfit": -209127.0
+      },
+      {
+        "period": "Q3/2025",
+        "totalBalance": 19226913.0,
+        "equity": 6736762.0,
+        "revenue": 633934.0,
+        "netProfit": 181513.0
+      },
+      {
+        "period": "Q2/2025",
+        "totalBalance": 19261316.0,
+        "equity": 6588424.0,
+        "revenue": 343737.0,
+        "netProfit": 552492.0
+      },
+      {
+        "period": "Q1/2025",
+        "totalBalance": 18573335.0,
+        "equity": 6032510.0,
+        "revenue": 269448.0,
+        "netProfit": 121276.0
+      },
+      {
+        "period": "Q4/2024",
+        "totalBalance": 17771124.0,
+        "equity": 5826003.0,
+        "revenue": 322310.0,
+        "netProfit": 323056.0
+      },
+      {
+        "period": "Q3/2024",
+        "totalBalance": 18271415.0,
+        "equity": 5510009.0,
+        "revenue": 344461.0,
+        "netProfit": 116594.0
+      }
+    ],
+    "returns": [
+      {
+        "period": "3m",
+        "value": 26.68
+      },
+      {
+        "period": "12m",
+        "value": 87.21
+      },
+      {
+        "period": "3y",
+        "value": 61.48
+      }
+    ]
+  },
+  {
+    "id": 813014,
+    "name": "סנו",
+    "symbol": "813014.TA",
+    "currentPrice": 40150.0,
+    "marketCap": 4933632.0,
+    "peRatio": 18.58,
+    "roe": null,
+    "financials": [
+      {
+        "period": "Y/2024",
+        "totalBalance": 2523104.0,
+        "equity": 2010319.0,
+        "revenue": 2273947.0,
+        "netProfit": 263466.0
+      },
+      {
+        "period": "Y/2023",
+        "totalBalance": 2368168.0,
+        "equity": 1899317.0,
+        "revenue": 2129458.0,
+        "netProfit": 237557.0
+      },
+      {
+        "period": "Q3/2025",
+        "totalBalance": 2662122.0,
+        "equity": 2178647.0,
+        "revenue": 586160.0,
+        "netProfit": 81413.0
+      },
+      {
+        "period": "Q2/2025",
+        "totalBalance": 2614133.0,
+        "equity": 2140953.0,
+        "revenue": 536563.0,
+        "netProfit": 56366.0
+      },
+      {
+        "period": "Q1/2025",
+        "totalBalance": 2610479.0,
+        "equity": 2091283.0,
+        "revenue": 586044.0,
+        "netProfit": 70131.0
+      },
+      {
+        "period": "Q4/2024",
+        "totalBalance": 2523104.0,
+        "equity": 2010319.0,
+        "revenue": 531572.0,
+        "netProfit": 57633.0
+      },
+      {
+        "period": "Q3/2024",
+        "totalBalance": 2540327.0,
+        "equity": 2046994.0,
+        "revenue": 605183.0,
+        "netProfit": 68161.0
+      }
+    ],
+    "returns": [
+      {
+        "period": "3m",
+        "value": 17.81
+      },
+      {
+        "period": "12m",
+        "value": 21.36
+      },
+      {
+        "period": "3y",
+        "value": 62.38
+      }
+    ]
+  },
+  {
+    "id": 822015,
+    "name": "דן מלונות",
+    "symbol": "822015.TA",
+    "currentPrice": 3468.0,
+    "marketCap": 4008977.0,
+    "peRatio": 2160.01,
+    "roe": null,
+    "financials": [
+      {
+        "period": "Y/2024",
+        "totalBalance": 2348990.0,
+        "equity": 1290626.0,
+        "revenue": 1497264.0,
+        "netProfit": 68366.0
+      },
+      {
+        "period": "Y/2023",
+        "totalBalance": 2369282.0,
+        "equity": 1221621.0,
+        "revenue": 1615581.0,
+        "netProfit": 123199.0
+      },
+      {
+        "period": "Q2/2025",
+        "totalBalance": 2459618.0,
+        "equity": 1237395.0,
+        "revenue": 378171.0,
+        "netProfit": 5443.0
+      },
+      {
+        "period": "Q1/2025",
+        "totalBalance": 2462607.0,
+        "equity": 1240530.0,
+        "revenue": 295834.0,
+        "netProfit": -52024.0
+      },
+      {
+        "period": "Q4/2024",
+        "totalBalance": 2348990.0,
+        "equity": 1290626.0,
+        "revenue": 338351.0,
+        "netProfit": 17218.0
+      },
+      {
+        "period": "Q3/2024",
+        "totalBalance": 2341434.0,
+        "equity": 1275157.0,
+        "revenue": 429838.0,
+        "netProfit": 31219.0
+      }
+    ],
+    "returns": [
+      {
+        "period": "3m",
+        "value": 31.85
+      },
+      {
+        "period": "12m",
+        "value": 52.98
+      },
+      {
+        "period": "3y",
+        "value": 30.13
+      }
+    ]
+  },
+  {
+    "id": 1144773,
+    "name": "יוניברסל מוטורס",
+    "symbol": "1144773.TA",
+    "currentPrice": 3113.0,
+    "marketCap": 3922380.0,
+    "peRatio": 13.9,
+    "roe": null,
+    "financials": [
+      {
+        "period": "Y/2024",
+        "totalBalance": 7284000.0,
+        "equity": 1563000.0,
+        "revenue": 4643000.0,
+        "netProfit": 300000.0
+      },
+      {
+        "period": "Y/2023",
+        "totalBalance": 5868690.0,
+        "equity": 1442611.0,
+        "revenue": 3529234.0,
+        "netProfit": 300198.0
+      },
+      {
+        "period": "Q2/2025",
+        "totalBalance": 7292000.0,
+        "equity": 1576000.0,
+        "revenue": 1179000.0,
+        "netProfit": 61000.0
+      },
+      {
+        "period": "Q1/2025",
+        "totalBalance": 7533000.0,
+        "equity": 1553000.0,
+        "revenue": 1404000.0,
+        "netProfit": 70000.0
+      },
+      {
+        "period": "Q4/2024",
+        "totalBalance": 7284000.0,
+        "equity": 1563000.0,
+        "revenue": 1068248.0,
+        "netProfit": 73878.0
+      },
+      {
+        "period": "Q3/2024",
+        "totalBalance": 6711048.0,
+        "equity": 1510601.0,
+        "revenue": 1210943.0,
+        "netProfit": 71240.0
+      }
+    ],
+    "returns": [
+      {
+        "period": "3m",
+        "value": 0.0
+      },
+      {
+        "period": "12m",
+        "value": 0.0
+      },
+      {
+        "period": "3y",
+        "value": 0.0
+      }
+    ]
+  },
+  {
+    "id": 1184282,
+    "name": "יו.אמ.איץ'",
+    "symbol": "1184282.TA",
+    "currentPrice": 4922.0,
+    "marketCap": 3865102.0,
+    "peRatio": 179.32,
+    "roe": null,
+    "financials": [
+      {
+        "period": "Y/2024",
+        "totalBalance": 5702916.13,
+        "equity": 3333463.83,
+        "revenue": 877293.16,
+        "netProfit": 9015.38
+      },
+      {
+        "period": "Y/2023",
+        "totalBalance": 5177821.91,
+        "equity": 2556019.51,
+        "revenue": 801295.0,
+        "netProfit": -31605.68
+      },
+      {
+        "period": "Q3/2025",
+        "totalBalance": 5387242.7,
+        "equity": 3057031.75,
+        "revenue": 221230.91,
+        "netProfit": 13921.57
+      },
+      {
+        "period": "Q2/2025",
+        "totalBalance": 5476202.15,
+        "equity": 3142643.28,
+        "revenue": 224720.19,
+        "netProfit": 8537.9
+      },
+      {
+        "period": "Q1/2025",
+        "totalBalance": 5760319.61,
+        "equity": 3392165.57,
+        "revenue": 227634.55,
+        "netProfit": -1007.58
+      },
+      {
+        "period": "Q4/2024",
+        "totalBalance": 5702916.13,
+        "equity": 3333463.83,
+        "revenue": 225650.84,
+        "netProfit": 102.12
+      },
+      {
+        "period": "Q3/2024",
+        "totalBalance": 5570687.49,
+        "equity": 3177474.05,
+        "revenue": 225089.41,
+        "netProfit": 30351.51
+      }
+    ],
+    "returns": [
+      {
+        "period": "3m",
+        "value": -5.94
+      },
+      {
+        "period": "12m",
+        "value": -27.78
+      },
+      {
+        "period": "3y",
+        "value": 0.41
+      }
+    ]
+  },
+  {
+    "id": 209015,
+    "name": "איילון",
+    "symbol": "209015.TA",
+    "currentPrice": 9420.0,
+    "marketCap": 2565483.0,
+    "peRatio": 6.92,
+    "roe": null,
+    "financials": [
+      {
+        "period": "Y/2024",
+        "totalBalance": 16832796.0,
+        "equity": 1092745.0,
+        "netProfit": 251228.0
+      },
+      {
+        "period": "Y/2023",
+        "totalBalance": 17676202.0,
+        "equity": 768232.0,
+        "netProfit": 84910.0
+      },
+      {
+        "period": "Q2/2025",
+        "totalBalance": 18017461.0,
+        "equity": 1263753.0,
+        "netProfit": 144288.0
+      },
+      {
+        "period": "Q1/2025",
+        "totalBalance": 17212759.0,
+        "equity": 1119465.0,
+        "netProfit": 56720.0
+      },
+      {
+        "period": "Q4/2024",
+        "totalBalance": 16832796.0,
+        "equity": 1092745.0,
+        "netProfit": 123572.0
+      },
+      {
+        "period": "Q3/2024",
+        "totalBalance": 19113547.0,
+        "equity": 950251.0,
+        "netProfit": 23583.0
+      }
+    ],
+    "returns": [
+      {
+        "period": "3m",
+        "value": 27.91
+      },
+      {
+        "period": "12m",
+        "value": 259.25
+      },
+      {
+        "period": "3y",
+        "value": 485.48
+      }
+    ]
+  },
+  {
+    "id": 1093202,
+    "name": "דור אלון",
+    "symbol": "1093202.TA",
+    "currentPrice": 15200.0,
+    "marketCap": 2405654.0,
+    "peRatio": 9.98,
+    "roe": null,
+    "financials": [
+      {
+        "period": "Y/2024",
+        "totalBalance": 6178997.0,
+        "equity": 1452288.0,
+        "revenue": 6760063.0,
+        "netProfit": 127838.0
+      },
+      {
+        "period": "Y/2023",
+        "totalBalance": 5870124.0,
+        "equity": 1322287.0,
+        "revenue": 7444596.0,
+        "netProfit": 66436.0
+      },
+      {
+        "period": "Q3/2025",
+        "totalBalance": 7179684.0,
+        "equity": 1522592.0,
+        "revenue": 1727366.0,
+        "netProfit": 38263.0
+      },
+      {
+        "period": "Q2/2025",
+        "totalBalance": 6926468.0,
+        "equity": 1584329.0,
+        "revenue": 1505230.0,
+        "netProfit": 112349.0
+      },
+      {
+        "period": "Q1/2025",
+        "totalBalance": 6391957.0,
+        "equity": 1471980.0,
+        "revenue": 1533233.0,
+        "netProfit": 19692.0
+      },
+      {
+        "period": "Q4/2024",
+        "totalBalance": 6178997.0,
+        "equity": 1452288.0,
+        "revenue": 1530920.0,
+        "netProfit": 67801.0
+      },
+      {
+        "period": "Q3/2024",
+        "totalBalance": 6065671.0,
+        "equity": 1382324.0,
+        "revenue": 1817743.0,
+        "netProfit": 41392.0
+      }
+    ],
+    "returns": [
+      {
+        "period": "3m",
+        "value": 15.14
+      },
+      {
+        "period": "12m",
+        "value": 74.97
+      },
+      {
+        "period": "3y",
+        "value": 41.66
+      }
+    ]
+  },
+  {
+    "id": 643015,
+    "name": "נפטא",
+    "symbol": "643015.TA",
+    "currentPrice": 2531.0,
+    "marketCap": 2396588.0,
+    "peRatio": 14.12,
+    "roe": null,
+    "financials": [
+      {
+        "period": "Y/2024",
+        "totalBalance": 5953574.0,
+        "equity": 1225652.0,
+        "revenue": 2453313.0,
+        "netProfit": 337724.0
+      },
+      {
+        "period": "Y/2023",
+        "totalBalance": 5725689.0,
+        "equity": 1075813.0,
+        "revenue": 2044536.0,
+        "netProfit": 166041.0
+      },
+      {
+        "period": "Q2/2025",
+        "totalBalance": 5654379.0,
+        "equity": 1267852.0,
+        "revenue": 624189.0,
+        "netProfit": 43734.0
+      },
+      {
+        "period": "Q1/2025",
+        "totalBalance": 6275908.0,
+        "equity": 1298059.0,
+        "revenue": 635018.0,
+        "netProfit": 36474.0
+      },
+      {
+        "period": "Q4/2024",
+        "totalBalance": 5953574.0,
+        "equity": 1225652.0,
+        "revenue": 644112.0,
+        "netProfit": 36635.0
+      },
+      {
+        "period": "Q3/2024",
+        "totalBalance": 6314354.0,
+        "equity": 1400634.0,
+        "revenue": 656324.0,
+        "netProfit": 51044.0
+      }
+    ],
+    "returns": [
+      {
+        "period": "3m",
+        "value": -2.76
+      },
+      {
+        "period": "12m",
+        "value": 5.53
+      },
+      {
+        "period": "3y",
+        "value": 78.05
+      }
+    ]
+  },
+  {
+    "id": 1178334,
+    "name": "אקונרג'י",
+    "symbol": "1178334.TA",
+    "currentPrice": 3954.0,
+    "marketCap": 2357651.0,
+    "peRatio": 2080.59,
+    "roe": null,
+    "financials": [
+      {
+        "period": "Y/2024",
+        "totalBalance": 2975132.44,
+        "equity": 612188.49,
+        "revenue": 150295.68,
+        "netProfit": 75635.68
+      },
+      {
+        "period": "Y/2023",
+        "totalBalance": 1492868.81,
+        "equity": 457779.72,
+        "revenue": 4408.75,
+        "netProfit": -45278.93
+      },
+      {
+        "period": "Q3/2025",
+        "totalBalance": 3476494.15,
+        "equity": 883127.04,
+        "revenue": 11805.09,
+        "netProfit": -24405.72
+      },
+      {
+        "period": "Q2/2025",
+        "totalBalance": 3201943.99,
+        "equity": 950952.68,
+        "revenue": 9251.21,
+        "netProfit": -39437.3
+      },
+      {
+        "period": "Q1/2025",
+        "totalBalance": 3160952.12,
+        "equity": 769518.2,
+        "revenue": 130426.2,
+        "netProfit": 77308.97
+      },
+      {
+        "period": "Q4/2024",
+        "totalBalance": 2975132.44,
+        "equity": 612188.49,
+        "revenue": 3462.32,
+        "netProfit": -12349.69
+      },
+      {
+        "period": "Q3/2024",
+        "totalBalance": 2618025.92,
+        "equity": 557551.06,
+        "revenue": 2748.89,
+        "netProfit": -22825.74
+      }
+    ],
+    "returns": [
+      {
+        "period": "3m",
+        "value": 9.66
+      },
+      {
+        "period": "12m",
+        "value": 40.82
+      },
+      {
+        "period": "3y",
+        "value": 140.88
+      }
+    ]
+  }
+]

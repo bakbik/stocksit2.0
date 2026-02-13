@@ -1,0 +1,13 @@
+{
+    "comment": "Manual overrides for Israeli stock report publication dates",
+    "instructions": "Format: 'SYMBOL.TA': { 'period': 'YYYY-MM-DD' }",
+    "dates": {
+        "AVGL.TA": {
+            "Q3/2025": "2025-11-20",
+            "Q2/2025": "2025-08-15"
+        },
+        "ICL.TA": {
+            "Q3/2024": "2024-11-14"
+        }
+    }
+}
