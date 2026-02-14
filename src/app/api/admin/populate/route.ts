@@ -14,7 +14,7 @@ export const maxDuration = 60 // Allow longer timeout on Vercel Pro, though Hobb
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const targetGroup = searchParams.get('group') // e.g. "TA-35" or "S&P 500"
-    const limit = parseInt(searchParams.get('limit') || '50') // Limit processing to avoid timeout
+    const limit = parseInt(searchParams.get('limit') || '10') // Reduced default limit to 10 to avoid timeouts
 
     if (!targetGroup) {
         return NextResponse.json({
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
         errors: [] as string[]
     }
 
-    console.log(`Starting population for group: ${targetGroup} (${symbols.length} symbols)`)
+    console.log(`Starting population for group: ${targetGroup} (${symbols.length} symbols, limit ${limit})`)
 
     try {
         // Ensure group exists
@@ -61,9 +61,6 @@ export async function GET(request: Request) {
 
         console.log(`Found ${existingSet.size} existing, ${pendingSymbols.length} pending.`)
 
-        // Process symbols
-        let processedCount = 0
-
         // If everything is done, just return success
         if (pendingSymbols.length === 0) {
             return NextResponse.json({
@@ -74,16 +71,14 @@ export async function GET(request: Request) {
             })
         }
 
+        // Process symbols
+        let processedCount = 0
+
         for (const symbol of pendingSymbols) {
             if (processedCount >= limit) break
             processedCount++
 
             try {
-                // Check if exists (but not in group, though logic above handles 'in group')
-                // We still need to check if it exists in DB at all to decide between update/create logic or just use upsert
-                // Upsert is safe.
-
-                // Reuse existing retrieval logic
                 let name = ''
                 let price = 0
                 let marketCap = 0
@@ -92,55 +87,83 @@ export async function GET(request: Request) {
                 let stockId = 0
                 let dailyChange = 0
                 let dailyChangePercent = 0
+                let fetched = false
 
+                // 1. TASE Strategy (Bizportal -> Yahoo Fallback)
                 if (symbol.endsWith('.TA')) {
-                    // Rate limit for Bizportal (2s delay to avoid blocking)
-                    await new Promise(r => setTimeout(r, 2000))
-
-                    // TASE Logic (Bizportal)
+                    // ID Derivation for Bizportal
                     const mkId = symbol.replace('.TA', '')
                     stockId = parseInt(mkId)
-                    const biz = await getBizportalQuote(mkId)
 
-                    if (!biz) {
-                        results.errors.push(`Failed to fetch TASE data for ${symbol}`)
-                        continue
+                    // A. Try Bizportal
+                    await new Promise(r => setTimeout(r, 2000)) // Rate limit
+                    try {
+                        const biz = await getBizportalQuote(mkId)
+                        if (biz) {
+                            name = biz.name
+                            price = biz.price
+                            marketCap = biz.marketCap
+                            dailyChange = biz.change || 0
+                            dailyChangePercent = biz.changePercent || 0
+                            fetched = true
+                        }
+                    } catch (err) {
+                        console.warn(`[Populate] Bizportal error for ${symbol}:`, err)
                     }
 
-                    name = biz.name
-                    price = biz.price
-                    marketCap = biz.marketCap
-                    dailyChange = biz.change || 0
-                    dailyChangePercent = biz.changePercent || 0
+                    // B. Fallback to Yahoo if Bizportal failed
+                    if (!fetched) {
+                        console.log(`[Populate] Falling back to Yahoo for ${symbol}`)
+                        await new Promise(r => setTimeout(r, 500))
+                        try {
+                            const quote = await yahooFinance.quote(symbol) as any
+                            if (quote) {
+                                name = quote.longName || quote.shortName || symbol
+                                price = quote.regularMarketPrice || 0
+                                marketCap = quote.marketCap || 0
+                                peRatio = quote.trailingPE || quote.forwardPE
+                                roe = quote.returnOnEquity ? quote.returnOnEquity * 100 : undefined
+                                dailyChange = quote.regularMarketChange || 0
+                                dailyChangePercent = quote.regularMarketChangePercent || 0
+                                fetched = true
+                            }
+                        } catch (err) {
+                            console.warn(`[Populate] Yahoo fallback error for ${symbol}:`, err)
+                        }
+                    }
 
                 } else {
-                    // Rate limit for Yahoo (500ms)
-                    await new Promise(r => setTimeout(r, 500))
-
-                    // US Logic (Yahoo)
-                    // Configurable hash ID for US stocks to ensure stability
-                    // Using a simple hash based on char codes
+                    // 2. US Strategy (Yahoo Only)
+                    // Hashing ID
                     stockId = parseInt(
                         symbol.split('').map(c => c.charCodeAt(0)).join('').substring(0, 8)
                     )
 
-                    // Fetch Yahoo
-                    const quote = await yahooFinance.quote(symbol) as any
-                    if (!quote) {
-                        results.errors.push(`Failed to fetch Yahoo data for ${symbol}`)
-                        continue
-                    }
+                    await new Promise(r => setTimeout(r, 500)) // Rate limit
 
-                    name = quote.longName || quote.shortName || symbol
-                    price = quote.regularMarketPrice || 0
-                    marketCap = quote.marketCap || 0
-                    peRatio = quote.trailingPE || quote.forwardPE
-                    roe = quote.returnOnEquity ? quote.returnOnEquity * 100 : undefined
-                    dailyChange = quote.regularMarketChange || 0
-                    dailyChangePercent = quote.regularMarketChangePercent || 0
+                    try {
+                        const quote = await yahooFinance.quote(symbol) as any
+                        if (quote) {
+                            name = quote.longName || quote.shortName || symbol
+                            price = quote.regularMarketPrice || 0
+                            marketCap = quote.marketCap || 0
+                            peRatio = quote.trailingPE || quote.forwardPE
+                            roe = quote.returnOnEquity ? quote.returnOnEquity * 100 : undefined
+                            dailyChange = quote.regularMarketChange || 0
+                            dailyChangePercent = quote.regularMarketChangePercent || 0
+                            fetched = true
+                        }
+                    } catch (err) {
+                        console.warn(`[Populate] Yahoo error for ${symbol}:`, err)
+                    }
                 }
 
-                // Create Stock
+                if (!fetched) {
+                    results.errors.push(`Failed to fetch data for ${symbol} (All sources failed)`)
+                    continue
+                }
+
+                // Create/Update Stock
                 await db.stock.upsert({
                     where: { id: stockId },
                     update: {
