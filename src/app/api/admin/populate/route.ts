@@ -112,7 +112,7 @@ export async function GET(request: Request) {
                     )
 
                     // Fetch Yahoo
-                    const quote = await yahooFinance.quote(symbol)
+                    const quote = await yahooFinance.quote(symbol) as any
                     if (!quote) {
                         results.errors.push(`Failed to fetch Yahoo data for ${symbol}`)
                         continue
