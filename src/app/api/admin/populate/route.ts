@@ -139,7 +139,7 @@ export async function GET(request: Request) {
                             // 2. Auto-Discovery: Search for the ID to find the real ticker (e.g. 2530185 -> ISRA.TA)
                             try {
                                 console.log(`[Populate] Searching Yahoo for ID ${numericId}...`)
-                                const searchResult = await yahooFinance.search(numericId)
+                                const searchResult = await yahooFinance.search(numericId) as any
 
                                 if (searchResult.quotes && searchResult.quotes.length > 0) {
                                     const bestMatch = searchResult.quotes[0]
