@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,6 +14,29 @@ model User {
   id         Int         @id @default(autoincrement())
   email      String?     @unique
   watchlists Watchlist[]
+  portfolio  Portfolio?
+}
+
+model Portfolio {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @unique
+  user      User      @relation(fields: [userId], references: [id])
+  holdings  Holding[]
+  createdAt DateTime  @default(now())
+}
+
+model Holding {
+  id          Int       @id @default(autoincrement())
+  portfolioId Int
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id])
+  stockId     Int
+  stock       Stock     @relation(fields: [stockId], references: [id])
+  quantity    Float
+  buyPrice    Float     // Average buy price
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([portfolioId, stockId])
 }
 
 model Stock {
@@ -21,6 +44,8 @@ model Stock {
   symbol       String            @unique // e.g., "AVGL.TA" or "AAPL"
   name         String
   currentPrice Float?
+  dailyChange  Float?            // Change in value
+  dailyChangePercent Float?      // Change in percentage
   marketCap    Float?
   peRatio      Float?            // P/E Ratio
   roe          Float?            // Return on Equity
@@ -32,6 +57,7 @@ model Stock {
   alerts       Alert[]
   notifications Notification[]
   groups       StockGroup[]      @relation("StockToGroup")
+  holdings     Holding[]
 }
 
 model StockGroup {

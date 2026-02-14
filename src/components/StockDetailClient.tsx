@@ -5,6 +5,7 @@ import { FinancialChart } from '@/components/FinancialChart'
 import Link from 'next/link'
 import { ArrowLeft, TrendingUp, TrendingDown, Newspaper, BarChart3, Info, ExternalLink } from 'lucide-react'
 import { StarButton } from '@/components/StarButton'
+import { AddToPortfolio } from '@/components/AddToPortfolio'
 import { format, formatDistanceToNow } from 'date-fns'
 import { useLanguage } from '@/lib/LanguageContext'
 import { calculateInvestmentMetrics } from '@/lib/investment_logic'
@@ -87,6 +88,7 @@ export function StockDetailClient({ stock, news, tab, rawSymbol, sortedFinancial
                             </div>
                             <div className="flex items-center gap-3 mt-4">
                                 <StarButton stockId={stock.id} isStarred={stock.watchlists.length > 0} />
+                                <AddToPortfolio stockId={stock.id} currentPrice={stock.currentPrice} symbol={stock.symbol} />
                                 <button className="bg-white text-slate-950 px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-indigo-500 hover:text-white transition-all active-press shadow-xl">
                                     {t('stockDetail.addAlert')}
                                 </button>

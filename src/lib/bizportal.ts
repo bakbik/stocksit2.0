@@ -7,6 +7,7 @@ export interface BizportalQuote {
     marketCap: number // Absolute ILS
     period: string | null
     changePercent: number
+    change?: number
 }
 
 export async function getBizportalQuote(stockId: string): Promise<BizportalQuote | null> {
@@ -55,7 +56,7 @@ export async function getBizportalQuote(stockId: string): Promise<BizportalQuote
 
             if (label.includes('שער בסיס') || label === 'שער') {
                 const val = parseFloat(valueText)
-                if (!isNaN(val)) price = val
+                // We keep base price to calculate change if needed
             }
             // Live price might be in "שער אחרון" or just the big number
             if (label.includes('שער אחרון')) {
@@ -63,6 +64,26 @@ export async function getBizportalQuote(stockId: string): Promise<BizportalQuote
                 if (!isNaN(val)) price = val
             }
         })
+
+        // 3.5 Extract Change Percent directly from header
+        const changePercentText = $('#paper_change .num').text().replace('%', '').trim()
+        changePercent = parseFloat(changePercentText) || 0
+
+        // If price is still 0, try the main header price
+        if (price === 0) {
+            const headerPriceText = $('#paper_rate .num').text().replace(/,/g, '').trim()
+            price = parseFloat(headerPriceText) || 0
+        }
+
+        // Calculate change value (approximate based on percent if base not found, or explicit)
+        // Bizportal doesn't always show the absolute change value clearly in the header, 
+        // but we can compute it if we have the previous close.
+        // For now, let's rely on the percent.
+        let change = 0
+        if (price > 0 && changePercent !== 0) {
+            const previousPrice = price / (1 + changePercent / 100)
+            change = price - previousPrice
+        }
 
         // 4. Market Cap
         // Try LI list first
@@ -101,7 +122,8 @@ export async function getBizportalQuote(stockId: string): Promise<BizportalQuote
             price: price / 100, // Bizportal is usually in Agorot -> Convert to ILS
             marketCap,
             period: null, // Scraper doesn't get financial period right now
-            changePercent
+            changePercent,
+            change
         }
 
     } catch (e) {

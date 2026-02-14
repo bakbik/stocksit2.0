@@ -146,6 +146,8 @@ export async function updateStockPrice(symbol: string) {
         let marketCap: number | undefined
         let peRatio: number | undefined
         let roe: number | undefined
+        let dailyChange: number | undefined
+        let dailyChangePercent: number | undefined
 
         // BIZPORTAL PATH for Israeli Stocks
         if (symbol.endsWith('.TA')) {
@@ -155,7 +157,9 @@ export async function updateStockPrice(symbol: string) {
             if (bizData) {
                 price = bizData.price
                 marketCap = bizData.marketCap
-                console.log(`[Bizportal] Fetched ${symbol}: ${price} ILS, Cap: ${marketCap}`)
+                dailyChange = bizData.change
+                dailyChangePercent = bizData.changePercent
+                console.log(`[Bizportal] Fetched ${symbol}: ${price} ILS, Cap: ${marketCap}, Change: ${dailyChangePercent}%`)
             } else {
                 console.error(`[Bizportal] Failed to fetch data for ${symbol}`)
                 return null
@@ -172,6 +176,8 @@ export async function updateStockPrice(symbol: string) {
             marketCap = quote.marketCap
             peRatio = quote.trailingPE || quote.forwardPE
             roe = quote.returnOnEquity ? quote.returnOnEquity * 100 : undefined
+            dailyChange = quote.regularMarketChange
+            dailyChangePercent = quote.regularMarketChangePercent
         }
 
         if (price === undefined) {
@@ -187,6 +193,8 @@ export async function updateStockPrice(symbol: string) {
                 marketCap: marketCap,
                 peRatio: peRatio,
                 roe: roe,
+                dailyChange: dailyChange,
+                dailyChangePercent: dailyChangePercent,
                 lastUpdated: new Date()
             }
         })
