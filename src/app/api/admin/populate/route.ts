@@ -47,36 +47,43 @@ export async function GET(request: Request) {
             create: { name: targetGroup }
         })
 
+        // OPTIMIZATION: Fetch all existing symbols in this group to skip them efficiently
+        const existingInGroup = await db.stock.findMany({
+            where: {
+                groups: { some: { id: groupRecord.id } }
+            },
+            select: { symbol: true }
+        })
+        const existingSet = new Set(existingInGroup.map(s => s.symbol))
+
+        // Filter symbols that are already done
+        const pendingSymbols = symbols.filter(s => !existingSet.has(s))
+
+        console.log(`Found ${existingSet.size} existing, ${pendingSymbols.length} pending.`)
+
         // Process symbols
         let processedCount = 0
-        for (const symbol of symbols) {
+
+        // If everything is done, just return success
+        if (pendingSymbols.length === 0) {
+            return NextResponse.json({
+                success: true,
+                group: targetGroup,
+                processed: 0,
+                message: `All ${symbols.length} symbols are already populated!`
+            })
+        }
+
+        for (const symbol of pendingSymbols) {
             if (processedCount >= limit) break
             processedCount++
 
             try {
-                // Check if exists
-                const existing = await db.stock.findUnique({ where: { symbol } })
+                // Check if exists (but not in group, though logic above handles 'in group')
+                // We still need to check if it exists in DB at all to decide between update/create logic or just use upsert
+                // Upsert is safe.
 
-                if (existing) {
-                    // Check if connected
-                    const isConnected = await db.stock.findFirst({
-                        where: {
-                            id: existing.id,
-                            groups: { some: { id: groupRecord.id } }
-                        }
-                    })
-
-                    if (!isConnected) {
-                        await db.stock.update({
-                            where: { id: existing.id },
-                            data: { groups: { connect: { id: groupRecord.id } } }
-                        })
-                        results.updated++
-                    }
-                    continue
-                }
-
-                // New Stock - Fetch Data
+                // Reuse existing retrieval logic
                 let name = ''
                 let price = 0
                 let marketCap = 0
