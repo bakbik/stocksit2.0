@@ -14,19 +14,48 @@ export async function getBizportalQuote(stockId: string): Promise<BizportalQuote
     const url = `https://www.bizportal.co.il/capitalmarket/quote/general/${stockId}`
     console.log(`[Bizportal] Fetching ${stockId}...`)
 
-    try {
-        const response = await fetch(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            },
-            next: { revalidate: 0 } // No cache
-        })
+    let retries = 3
+    let response: Response | null = null
 
-        if (!response.ok) {
+    while (retries > 0) {
+        try {
+            response = await fetch(url, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                    'Accept-Language': 'en-US,en;q=0.5',
+                    'Cache-Control': 'no-cache',
+                    'Pragma': 'no-cache'
+                },
+                next: { revalidate: 0 }
+            })
+
+            if (response.ok) break
+
+            if (response.status === 429 || response.status >= 500) {
+                console.warn(`[Bizportal] Rate limit/Server error ${response.status} for ${stockId}. Retrying...`)
+                await new Promise(r => setTimeout(r, 2000 * (4 - retries))) // Backoff
+                retries--
+                continue
+            }
+
+            // Other errors (404 etc) - don't retry
             console.error(`[Bizportal] Failed to fetch ${stockId}: ${response.status}`)
             return null
-        }
 
+        } catch (e) {
+            console.warn(`[Bizportal] Network error for ${stockId}: ${e}. Retrying...`)
+            await new Promise(r => setTimeout(r, 2000))
+            retries--
+        }
+    }
+
+    if (!response || !response.ok) {
+        console.error(`[Bizportal] Failed to fetch ${stockId} after retries.`)
+        return null
+    }
+
+    try {
         const html = await response.text()
         const $ = cheerio.load(html)
 

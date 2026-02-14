@@ -94,6 +94,9 @@ export async function GET(request: Request) {
                 let dailyChangePercent = 0
 
                 if (symbol.endsWith('.TA')) {
+                    // Rate limit for Bizportal (2s delay to avoid blocking)
+                    await new Promise(r => setTimeout(r, 2000))
+
                     // TASE Logic (Bizportal)
                     const mkId = symbol.replace('.TA', '')
                     stockId = parseInt(mkId)
@@ -111,6 +114,9 @@ export async function GET(request: Request) {
                     dailyChangePercent = biz.changePercent || 0
 
                 } else {
+                    // Rate limit for Yahoo (500ms)
+                    await new Promise(r => setTimeout(r, 500))
+
                     // US Logic (Yahoo)
                     // Configurable hash ID for US stocks to ensure stability
                     // Using a simple hash based on char codes
