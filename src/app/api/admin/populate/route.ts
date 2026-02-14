@@ -61,7 +61,7 @@ export async function GET(request: Request) {
 
         console.log(`Found ${existingSet.size} existing, ${pendingSymbols.length} pending.`)
 
-        // If everything is done, just return success
+        // If everything is done, just return success (Unless force update?)
         if (pendingSymbols.length === 0) {
             return NextResponse.json({
                 success: true,
@@ -74,9 +74,12 @@ export async function GET(request: Request) {
         // Process symbols
         let processedCount = 0
 
-        for (const symbol of pendingSymbols) {
+        for (const symbolOriginal of pendingSymbols) {
             if (processedCount >= limit) break
             processedCount++
+
+            // Mutable symbol for this iteration (in case we find a better one via search)
+            let symbol = symbolOriginal
 
             try {
                 let name = ''
@@ -89,7 +92,7 @@ export async function GET(request: Request) {
                 let dailyChangePercent = 0
                 let fetched = false
 
-                // 1. TASE Strategy (Bizportal -> Yahoo Fallback)
+                // 1. TASE Strategy (Bizportal -> Yahoo Fallback -> Yahoo Search)
                 if (symbol.endsWith('.TA')) {
                     // ID Derivation for Bizportal
                     const mkId = symbol.replace('.TA', '')
@@ -113,9 +116,12 @@ export async function GET(request: Request) {
 
                     // B. Fallback to Yahoo if Bizportal failed
                     if (!fetched) {
+                        const numericId = mkId
                         console.log(`[Populate] Falling back to Yahoo for ${symbol}`)
+
                         await new Promise(r => setTimeout(r, 500))
                         try {
+                            // 1. Try Direct Quote first (e.g. 12345.TA - unlikely but possible)
                             const quote = await yahooFinance.quote(symbol) as any
                             if (quote) {
                                 name = quote.longName || quote.shortName || symbol
@@ -128,7 +134,38 @@ export async function GET(request: Request) {
                                 fetched = true
                             }
                         } catch (err) {
-                            console.warn(`[Populate] Yahoo fallback error for ${symbol}:`, err)
+                            console.warn(`[Populate] Yahoo direct quote failed for ${symbol}:`, err)
+
+                            // 2. Auto-Discovery: Search for the ID to find the real ticker (e.g. 2530185 -> ISRA.TA)
+                            try {
+                                console.log(`[Populate] Searching Yahoo for ID ${numericId}...`)
+                                const searchResult = await yahooFinance.search(numericId)
+
+                                if (searchResult.quotes && searchResult.quotes.length > 0) {
+                                    const bestMatch = searchResult.quotes[0]
+                                    const foundTicker = bestMatch.symbol
+                                    console.log(`[Populate] Found mapped ticker: ${numericId} -> ${foundTicker}`)
+
+                                    // Fetch using the found ticker
+                                    const quote = await yahooFinance.quote(foundTicker) as any
+                                    if (quote) {
+                                        // Update symbol to the correct one!
+                                        // Note: We keep the ID as the numeric TASE ID for DB consistency, 
+                                        // but we save the official symbol.
+                                        symbol = foundTicker // Update local var for saving
+                                        name = quote.longName || quote.shortName || symbol
+                                        price = quote.regularMarketPrice || 0
+                                        marketCap = quote.marketCap || 0
+                                        peRatio = quote.trailingPE || quote.forwardPE
+                                        roe = quote.returnOnEquity ? quote.returnOnEquity * 100 : undefined
+                                        dailyChange = quote.regularMarketChange || 0
+                                        dailyChangePercent = quote.regularMarketChangePercent || 0
+                                        fetched = true
+                                    }
+                                }
+                            } catch (searchErr) {
+                                console.warn(`[Populate] Yahoo search failed for ${numericId}:`, searchErr)
+                            }
                         }
                     }
 
@@ -159,7 +196,7 @@ export async function GET(request: Request) {
                 }
 
                 if (!fetched) {
-                    results.errors.push(`Failed to fetch data for ${symbol} (All sources failed)`)
+                    results.errors.push(`Failed to fetch data for ${symbolOriginal} (All sources failed)`)
                     continue
                 }
 
@@ -195,8 +232,8 @@ export async function GET(request: Request) {
                 results.created++
 
             } catch (e) {
-                console.error(`Error processing ${symbol}:`, e)
-                results.errors.push(`${symbol}: ${String(e)}`)
+                console.error(`Error processing ${symbolOriginal}:`, e)
+                results.errors.push(`${symbolOriginal}: ${String(e)}`)
             }
         }
 
