@@ -149,35 +149,47 @@ export async function updateStockPrice(symbol: string) {
         let dailyChange: number | undefined
         let dailyChangePercent: number | undefined
 
-        // BIZPORTAL PATH for Israeli Stocks
-        if (symbol.endsWith('.TA')) {
-            const stockId = symbol.replace('.TA', '') // 1100957.TA -> 1100957
-            const bizData = await getBizportalQuote(stockId)
+        let fetched = false
 
-            if (bizData) {
-                price = bizData.price
-                marketCap = bizData.marketCap
-                dailyChange = bizData.change
-                dailyChangePercent = bizData.changePercent
-                console.log(`[Bizportal] Fetched ${symbol}: ${price} ILS, Cap: ${marketCap}, Change: ${dailyChangePercent}%`)
-            } else {
-                console.error(`[Bizportal] Failed to fetch data for ${symbol}`)
-                return null
+        // 1. Try BIZPORTAL PATH for Israeli Stocks first
+        if (symbol.endsWith('.TA')) {
+            const stockId = symbol.replace('.TA', '')
+            // Optimization: Skip Bizportal immediately if it's an English ticker, as Bizportal only accepts numeric IDs
+            if (/^\d+$/.test(stockId)) {
+                const bizData = await getBizportalQuote(stockId)
+                if (bizData) {
+                    price = bizData.price
+                    marketCap = bizData.marketCap
+                    dailyChange = bizData.change
+                    dailyChangePercent = bizData.changePercent
+                    console.log(`[Bizportal] Fetched ${symbol}: ${price} ILS, Cap: ${marketCap}`)
+                    fetched = true
+                }
             }
         }
-        // YAHOO PATH for Global Stocks (S&P 500 etc)
-        else {
-            const quote = await yahooFinance.quote(symbol)
-            if (!quote) {
-                console.error(`No data found for ${symbol}`)
-                return null
+
+        // 2. FALLBACK (or Primary for Global): Try YAHOO FINANCE
+        if (!fetched) {
+            try {
+                const quote = await yahooFinance.quote(symbol)
+                if (quote) {
+                    price = quote.regularMarketPrice
+                    marketCap = quote.marketCap
+                    peRatio = quote.trailingPE || quote.forwardPE
+                    roe = quote.returnOnEquity ? quote.returnOnEquity * 100 : undefined
+                    dailyChange = quote.regularMarketChange
+                    dailyChangePercent = quote.regularMarketChangePercent
+                    fetched = true
+                    console.log(`[Yahoo] Fetched ${symbol}: ${price}, Cap: ${marketCap}`)
+                }
+            } catch (e) {
+                console.error(`[Yahoo] Failed to fetch data for ${symbol}:`, (e as Error).message)
             }
-            price = quote.regularMarketPrice
-            marketCap = quote.marketCap
-            peRatio = quote.trailingPE || quote.forwardPE
-            roe = quote.returnOnEquity ? quote.returnOnEquity * 100 : undefined
-            dailyChange = quote.regularMarketChange
-            dailyChangePercent = quote.regularMarketChangePercent
+        }
+
+        if (!fetched || price === undefined) {
+            console.error(`[Sync] CRITICAL: No price data found anywhere for ${symbol}`)
+            return null
         }
 
         if (price === undefined) {
