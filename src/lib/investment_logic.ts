@@ -93,16 +93,6 @@ export function calculateInvestmentMetrics(stock: any, financials: any[]): Inves
     const equityRatio = (latestF.equity && latestF.totalBalance) ? latestF.equity / latestF.totalBalance : 0
     const isEquityValid = equityRatio > 0.20
 
-    const ttmProfitThousands = (last4QProfit / 1000)
-    const potentialBaselineThousands = Math.max(ttmProfitThousands, baseProfit)
-    const calculateGrowth = (current: number, previous: number) => {
-        if (!previous || previous === 0) return 0
-        const prevAbsolute = previous * 1000
-        const diff = (current - prevAbsolute)
-        return prevAbsolute < 0 ? diff / Math.abs(prevAbsolute) : (current / prevAbsolute) - 1
-    }
-    const potential = potentialBaselineThousands > 0 ? calculateGrowth(expectedAnnualProfit, potentialBaselineThousands) : null
-
     // STRICT P/E HIERARCHY
     let peValue: number | null = null
     let peType: 'reported' | 'calculated' | 'estimated' | null = null
@@ -133,9 +123,37 @@ export function calculateInvestmentMetrics(stock: any, financials: any[]): Inves
         }
     }
 
+    const ttmProfitThousands = (last4QProfit / 1000)
+    const potentialBaselineThousands = Math.max(ttmProfitThousands, baseProfit)
+
+    const calculateGrowth = (current: number, previous: number) => {
+        if (!previous || previous === 0) return 0
+        const prevAbsolute = previous * 1000
+        const diff = (current - prevAbsolute)
+        return prevAbsolute < 0 ? diff / Math.abs(prevAbsolute) : (current / prevAbsolute) - 1
+    }
+
+    // NEW POTENTIAL LOGIC: Valuation-Based
+    // FairValue = ExpectedProfit * (TargetPE)
+    // TargetPE = Current PE (if healthy) or 15 (if conservative fallback needed)
+    // We use the identified 'peValue' as the Target PE, assuming the market's current rating is the baseline to project future growth on.
+    // If no PE is found or it's invalid, we don't calculate potential (or fallback to 15? Let's use peValue || 15 for safety in verdict, but strictly here for potential)
+
+    let potential: number | null = null
+    const targetPE = peValue || 15
+
+    if (expectedAnnualProfit !== 0 && stock.marketCap > 0) {
+        // potential = (TargetValue - CurrentValue) / CurrentValue
+        // TargetValue = ExpectedProfit * TargetPE
+        const impliedFairValue = expectedAnnualProfit * targetPE
+        potential = (impliedFairValue - stock.marketCap) / stock.marketCap
+    }
+
     const isPEValid = peValue !== null && peValue >= 2 && peValue <= 40
     const revGrowth = calculateGrowth(expectedAnnualRevenue, baseRevenue)
     const profitGrowth = calculateGrowth(expectedAnnualProfit, baseProfit)
+
+    // Verdict Logic: Require positive potential AND valid fundamentals
     const verdict = (isPEValid && isEquityValid && potential !== null && potential > 0 && revGrowth > 0 && profitGrowth > 0) ? 'buy' : 'hold'
 
     return {
